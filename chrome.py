@@ -13,6 +13,8 @@ import selenium.webdriver.support.expected_conditions as EC
 import os
 import time
 import csv
+import config
+
 
 # https://www.python.org/downloads/
 # pip install selenium
@@ -173,29 +175,32 @@ class harmony():
 			os.makedirs(backupDir)
 
 		copyfile(filePath, backupDir + "\\" + fileName)
+
+	def getEffectiveDate(self, saledate):
+		effDate = saleDate.split("/")
+		
+		if len(effDate[1]) == 1:
+			day = "0" + effDate[1]
+		else:
+			day = effDate[1]
+
+		effDate = effDate[0] + "/" + day + "/" + "2019"
+		return effDate
 		
 if __name__ == "__main__":
 	print("****************STARTING QUOTING********************")
 	obj = harmony()
 
-	loginInfo = obj.readAddress(r'C:\srcpy\login.csv')
-	print(loginInfo)
-	for row in loginInfo:
-		url = row['url']
-		print(row['username'])
-		username = row['username']
-		password = row['password']
-		filePath = row['filepath']
-		agencyEmail = row['agencyemail']
-		phoneNumber = row['phonenumber']
-		shareName = row['sharename']
-		shareEmail = row['shareemail']
+	url = config.webdetails['url']
+	username = config.webdetails['username']
+	password = config.webdetails['password']
+	filePath = config.filepath
+	agencyEmail = config.userdetails['agencyemail']
+	phoneNumber = config.userdetails['phonenumber']
+	shareName = config.userdetails['sharename']
+	shareEmail = config.userdetails['shareemail']
 
 	obj.backupFile(filePath)
-
-	obj.shutdown()
-	quit()
-	
 	
 	listOfAddr = obj.readAddress(filePath)
 	obj.login(url, username, password)
@@ -216,14 +221,16 @@ if __name__ == "__main__":
 		lastName = row['Last Name']
 		saleDate = row['SaleDate']
 
-		effDate = saleDate.split("/")
+		# effDate = saleDate.split("/")
 		
-		if len(effDate[1]) == 1:
-			day = "0" + effDate[1]
-		else:
-			day = effDate[1]
+		# if len(effDate[1]) == 1:
+		# 	day = "0" + effDate[1]
+		# else:
+		# 	day = effDate[1]
 
-		effectiveDate = effDate[0] + "/" + day + "/" + "2019"
+		# effectiveDate = effDate[0] + "/" + day + "/" + "2019"
+
+		effectiveDate = obj.getEffectiveDate(saleDate)
 		
 		print("****************QUOTING********************")
 		print(address, firstName, lastName, effectiveDate)
