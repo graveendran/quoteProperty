@@ -186,6 +186,17 @@ class harmony():
 
 		effDate = effDate[0] + "/" + day + "/" + "2019"
 		return effDate
+	
+	def buildPropertyAddress(self, streetNumber, streetPrefix, streetName, streetUnit, city, zip):
+		address = ' '.join([
+						row['SiteStreetNumber'], 
+						row['SiteStreetPrefix'], 
+						row['SiteStreetName'],
+						row['SiteStreetUnit'], 
+						row['SiteCity'], 
+						row['SiteZip']
+						]).replace("    ", " ").replace("  ", " ")
+		return address
 		
 if __name__ == "__main__":
 	print("****************STARTING QUOTING********************")
@@ -209,26 +220,11 @@ if __name__ == "__main__":
 	print("****************SIGNED IN********************")
 	print("****************READING THE LIST********************")
 	for row in listOfAddr:
-		address = ' '.join([
-						row['SiteStreetNumber'], 
-						row['SiteStreetPrefix'], 
-						row['SiteStreetName'],
-						row['SiteStreetUnit'], 
-						row['SiteCity'], 
-						row['SiteZip']
-						]).replace("    ", " ").replace("  ", " ")
+		address = obj.buildPropertyAddress(row['SiteStreetNumber'], row['SiteStreetPrefix'], 
+								row['SiteStreetName'], row['SiteStreetUnit'], row['SiteCity'], row['SiteZip'])
 		firstName = row['First Name']
 		lastName = row['Last Name']
 		saleDate = row['SaleDate']
-
-		# effDate = saleDate.split("/")
-		
-		# if len(effDate[1]) == 1:
-		# 	day = "0" + effDate[1]
-		# else:
-		# 	day = effDate[1]
-
-		# effectiveDate = effDate[0] + "/" + day + "/" + "2019"
 
 		effectiveDate = obj.getEffectiveDate(saleDate)
 		
