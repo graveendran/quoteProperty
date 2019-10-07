@@ -191,6 +191,12 @@ class harmony():
 			day = effDate[1]
 
 		effDate = effDate[0] + "/" + day + "/" + "2019"
+
+		todayDate = date.today().strftime('%m/%d/%Y')
+		effDate = time.strftime('%m/%d/%Y')
+		if (effDate >= todayDate):
+			effDate = todayDate
+
 		return effDate
 	
 	def buildPropertyAddress(self, streetNumber, streetPrefix, streetName, streetUnit, city, zip):
