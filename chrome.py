@@ -45,9 +45,15 @@ class harmony():
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.CLASS_NAME, "auth0-label-submit")))
 		element.click()
 		
+	def getElementById(self, id):
+		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].firstName")))
+		return element
+	
 	def gotoHarmony(self, url, addressToQuote, firstName, lastName, agencyEmail, phoneNumber, effectiveDate, shareName, shareEmail):
 		print('################Search Address#########################')
 		self.driver.get(url + "search/address")
+		product = Select(ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "product"))))
+		product.select_by_index(1)
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "address")))
 		element.send_keys(addressToQuote)
 		element.send_keys(Keys.RETURN)
@@ -73,12 +79,12 @@ class harmony():
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "effectiveDate")))
 		element.send_keys(effectiveDate)
 		try:
-			mySelect = Select(ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "agentCode"))))
+			agentCode = Select(ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "agentCode"))))
 			# mySelect = Select(self.driver.find_element_by_id("agentCode"))
-			mySelect.select_by_index(1)
+			agentCode.select_by_index(1)
 		except NoSuchElementException:
 			try:
-				mySelect.select_by_visible_text("WALLY WAGONER")
+				agentCode.select_by_visible_text("WALLY WAGONER")
 			except NoSuchElementException:
 				element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "agentCode")))
 				element.send_keys(Keys.DOWN)
