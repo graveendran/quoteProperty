@@ -39,7 +39,7 @@ class harmony():
 		
 	def login(self, url, username, password):
 		self.driver.get(url)
-		logging.info('################Login into System#########################')
+		logging.info('################Login into System -- %s #########################' %(username))
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.NAME, "username")))
 		element.send_keys(username)
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.NAME, "password")))
@@ -52,7 +52,7 @@ class harmony():
 		return element
 	
 	def gotoHarmony(self, url, addressToQuote, firstName, lastName, agencyEmail, phoneNumber, effectiveDate, shareName, shareEmail):
-		logging.info('################Search Address#########################')
+		logging.info('################Search Address -- %s #########################' %(addressToQuote))
 		self.driver.get(url + "search/address")
 		product = Select(ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "product"))))
 		product.select_by_index(1)
@@ -213,21 +213,25 @@ class harmony():
 						row['SiteZip']
 						]).replace("    ", " ").replace("  ", " ")
 		return address
-		
-if __name__ == "__main__":
-	folderPath = os.path.dirname(__file__)
-	logFolder = folderPath + "\\log\\"
-	if not os.path.exists(logFolder):
-		os.makedirs(logFolder)
-
-	logFileName = 'quoteLogs-' + date.today().strftime("%Y%m%d-%H%M%S") + '.log'
 	
-	logging.basicConfig(filename = logFolder + logFileName, 
+	def logConfiguration(self):
+		folderPath = os.path.dirname(__file__)
+		logFolder = '%s\\log\\' %(folderPath)
+		if not os.path.exists(logFolder):
+			os.makedirs(logFolder)
+
+		logFileName = 'quoteLogs-%s.log' %(datetime.now().strftime("%Y%m%d-%H%M%S"))
+		logging.basicConfig(filename = logFolder + logFileName, 
 											level = logging.INFO,
 											format = '%(asctime)s:%(levelname)s:%(message)s')
-	logging.info("****************STARTING QUOTING********************")
-	obj = harmony()
 
+if __name__ == "__main__":
+	
+	obj = harmony()
+	obj.logConfiguration()
+	logging.info("****************STARTING QUOTING********************")
+	# quit()
+	
 	url = config.webdetails['url']
 	username = config.webdetails['username']
 	password = config.webdetails['password']
@@ -244,7 +248,7 @@ if __name__ == "__main__":
 	logging.info("****************WAITING TO SIGN-IN********************")
 	obj.waitForLoading()
 	logging.info("****************SIGNED IN********************")
-	logging.info("****************READING THE LIST********************")
+	logging.info("****************READING THE PROPERTY ADDRESS LIST********************")
 	for row in listOfAddr:
 		address = obj.buildPropertyAddress(row['SiteStreetNumber'], row['SiteStreetPrefix'], 
 								row['SiteStreetName'], row['SiteStreetUnit'], row['SiteCity'], row['SiteZip'])
