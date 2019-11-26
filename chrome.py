@@ -31,6 +31,7 @@ class harmony():
 		options.add_argument('--ignore-ssl-errors')
 		dir_path = os.path.dirname(os.path.realpath(__file__))
 		chromedriver = dir_path + "/chromedriver"
+		print(dir_path + "/chromedriver")
 		os.environ["webdriver.chrome.driver"] = chromedriver
 		self.driver = webdriver.Chrome(chrome_options=options, executable_path=chromedriver)
 	
@@ -72,11 +73,11 @@ class harmony():
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].lastName")))
 		element.send_keys(lastName)
 		
-		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].emailAddress")))
-		element.send_keys(agencyEmail)
+		# element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].emailAddress")))
+		# element.send_keys(agencyEmail)
 		
-		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].primaryPhoneNumber")))
-		element.send_keys(phoneNumber)
+		# element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "policyHolders[0].primaryPhoneNumber")))
+		# element.send_keys(phoneNumber)
 		
 		element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.ID, "effectiveDate")))
 		element.send_keys(effectiveDate)
@@ -150,13 +151,20 @@ class harmony():
 			element.send_keys(shareEmail)
 			
 			logging.info('################ Press Enter to Submit #########################')
-			element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.XPATH, '//form[@id="sendQuoteSummary"]/div[2]/button[2]')))
+			buttons = self.driver.find_element_by_xpath("//*[contains(text(), 'Send Email')]")
 			logging.info('################ Click Send Email Button ########################')
-			element.click()
+			buttons.click()
+			logging.info('################ Clicked Send Email Button ########################')
+			
+			# element = ui.WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.XPATH, '//form[@id="sendQuoteSummary"]/div[2]/button[2]')))
+			logging.info('################ Click Send Email Button ########################')
+			# element.click()
 		except TimeoutException:
 			logging.error('Not Found: Share Quote Button', element, addressToQuote)
 		except NoSuchElementException:
 			logging.error('Not Found: Share Quote Button', element, addressToQuote)
+		except:
+			logging.error('Error: Share Quote Button', element, addressToQuote)			
 		
 	def shutdown(self):
 		self.driver.close()
